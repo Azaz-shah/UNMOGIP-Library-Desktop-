@@ -73,7 +73,7 @@
     "publish": {
       "provider": "github",
       "owner": "Azaz-shah",
-      "repo": "UNMOGIP-Library-Managment-System"
+      "repo": "UNMOGIP-Library-Desktop-"
     }
   },
   "allowScripts": {
