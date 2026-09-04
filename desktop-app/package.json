@@ -1,0 +1,83 @@
+{
+  "name": "unmogip-library-desktop",
+  "version": "1.0.0",
+  "description": "UNMOGIP Library Management System - Desktop (Electron + SQLite)",
+  "author": "UNMOGIP",
+  "license": "UNLICENSED",
+  "private": true,
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "rebuild": "@electron/rebuild -f -w better-sqlite3",
+    "pack": "electron-builder --dir",
+    "dist": "npm run rebuild && electron-builder",
+    "dist:publish": "npm run rebuild && electron-builder --publish always"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "better-sqlite3": "^12.11.1",
+    "bwip-js": "^4.3.0",
+    "cors": "^2.8.5",
+    "csv-parser": "^3.0.0",
+    "dotenv": "^16.4.7",
+    "electron-updater": "^6.8.9",
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2",
+    "multer": "^1.4.5-lts.1",
+    "node-cron": "^3.0.3",
+    "nodemailer": "^6.9.16",
+    "pdfkit": "^0.15.1",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "@electron/rebuild": "^3.7.2",
+    "electron": "^44.2.0",
+    "electron-builder": "^26.15.3"
+  },
+  "build": {
+    "appId": "org.unmogip.library",
+    "productName": "UNMOGIP Library Management System",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "backend/**/*",
+      "frontend/**/*",
+      "!backend/.env",
+      "!backend/data/**"
+    ],
+    "asarUnpack": [
+      "**/node_modules/better-sqlite3/**"
+    ],
+    "npmRebuild": false,
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": true,
+      "perMachine": false,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "UNMOGIP Library",
+      "artifactName": "${productName} Setup ${version}.${ext}"
+    },
+    "publish": {
+      "provider": "github",
+      "owner": "Azaz-shah",
+      "repo": "UNMOGIP-Library-Managment-System"
+    }
+  },
+  "allowScripts": {
+    "better-sqlite3@12.11.1": true,
+    "electron-winstaller@5.4.0": true
+  }
+}

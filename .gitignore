@@ -23,3 +23,8 @@ Thumbs.db
 # IDE
 .vscode/
 .idea/
+
+# Electron desktop-app
+desktop-app/release/
+desktop-app/node_modules/
+desktop-app/build/

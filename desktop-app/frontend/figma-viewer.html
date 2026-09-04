@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Figma Designs Viewer</title>
+  <style>
+    body { font-family: Arial; background: #1a1a2e; color: white; padding: 20px; }
+    h1 { text-align: center; color: #1a8fbf; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+    .card { background: #16213e; border-radius: 12px; overflow: hidden; }
+    .card img { width: 100%; height: auto; display: block; }
+    .card .label { padding: 10px; font-size: 12px; color: #aaa; text-align: center; }
+  </style>
+</head>
+<body>
+  <h1>UNMOGIP Figma Designs</h1>
+  <div class="grid" id="gallery"></div>
+  <script>
+    const images = [
+      "WhatsApp Image 2026-08-25 at 11.20.34 AM (1).jpeg",
+      "WhatsApp Image 2026-08-25 at 11.20.34 AM (2).jpeg",
+      "WhatsApp Image 2026-08-25 at 11.20.34 AM.jpeg",
+      "WhatsApp Image 2026-08-25 at 11.20.35 AM (1).jpeg",
+      "WhatsApp Image 2026-08-25 at 11.20.35 AM (2).jpeg",
+      "WhatsApp Image 2026-08-25 at 11.20.35 AM (3).jpeg",
+      "WhatsApp Image 2026-08-25 at 11.20.35 AM (4).jpeg",
+      "WhatsApp Image 2026-08-25 at 11.20.35 AM.jpeg",
+      "WhatsApp Image 2026-08-25 at 11.20.36 AM (1).jpeg",
+      "WhatsApp Image 2026-08-25 at 11.20.36 AM (2).jpeg",
+      "WhatsApp Image 2026-08-25 at 11.20.36 AM (3).jpeg",
+      "WhatsApp Image 2026-08-25 at 11.20.36 AM (4).jpeg",
+      "WhatsApp Image 2026-08-25 at 11.20.36 AM (5).jpeg",
+      "WhatsApp Image 2026-08-25 at 11.20.36 AM (6).jpeg",
+      "WhatsApp Image 2026-08-25 at 11.20.36 AM (7).jpeg",
+      "WhatsApp Image 2026-08-25 at 11.20.36 AM.jpeg",
+      "WhatsApp Image 2026-08-25 at 11.20.40 AM (1).jpeg",
+      "WhatsApp Image 2026-08-25 at 11.20.40 AM (2).jpeg",
+      "WhatsApp Image 2026-08-25 at 11.20.40 AM (3).jpeg",
+      "WhatsApp Image 2026-08-25 at 11.20.40 AM (4).jpeg",
+      "WhatsApp Image 2026-08-25 at 11.20.40 AM (5).jpeg",
+      "WhatsApp Image 2026-08-25 at 11.20.40 AM.jpeg"
+    ];
+    const gallery = document.getElementById('gallery');
+    images.forEach((img, i) => {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = `
+        <img src="/figma/${encodeURIComponent(img)}" alt="Design ${i+1}" loading="lazy" />
+        <div class="label">Design ${i+1}</div>
+      `;
+      gallery.appendChild(card);
+    });
+  </script>
+</body>
+</html>
