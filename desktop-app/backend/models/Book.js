@@ -52,16 +52,16 @@ export default createModel({
   },
   async preSave(doc, { isNew }) {
     const self = this;
-    // Generate barcode: LIB-{YEAR}-{sequential 6-digit} (Rule 2.1)
+    // Generate barcode: LIB-{YEAR}-{random 6-digit}
     if (!doc.barcode) {
       const year = new Date().getFullYear();
-      const rows = self._allDocs()
-        .filter((b) => b.barcode && b.barcode.startsWith(`LIB-${year}-`))
-        .sort((a, b) => (b.barcodeSequence || 0) - (a.barcodeSequence || 0));
-      const last = rows[0];
-      const seq = (last?.barcodeSequence || 0) + 1;
-      doc.barcodeSequence = seq;
-      doc.barcode = `LIB-${year}-${String(seq).padStart(6, '0')}`;
+      const existing = new Set(self._allDocs().map((b) => b.barcode));
+      let barcode;
+      do {
+        const rand = String(Math.floor(100000 + Math.random() * 900000));
+        barcode = `LIB-${year}-${rand}`;
+      } while (existing.has(barcode));
+      doc.barcode = barcode;
     }
     // On new book creation, set available = copies (Rule 2.1)
     if (isNew) {

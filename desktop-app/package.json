@@ -38,7 +38,7 @@
     "appId": "org.unmogip.library",
     "productName": "UNMOGIP Library Management System",
     "directories": {
-      "output": "release"
+      "output": "release5"
     },
     "files": [
       "main.js",

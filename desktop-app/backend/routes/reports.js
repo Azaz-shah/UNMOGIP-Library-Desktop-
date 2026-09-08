@@ -88,8 +88,8 @@ router.get('/overdue', async (req, res) => {
       status: { $in: ['borrowed', 'overdue'] },
       dueDate: { $lt: new Date() },
     })
-      .populate('book', 'title author isbn barcode')
-      .populate('employee', 'name email employeeId department')
+      .populate('book')
+      .populate('employee')
       .sort({ dueDate: 1 });
 
     const report = overdue.map((b) => ({
@@ -119,8 +119,8 @@ router.get('/employee-wise', async (req, res) => {
     if (employeeId) query.employee = employeeId;
 
     const report = await Borrowing.find(query)
-      .populate('book', 'title author isbn barcode')
-      .populate('employee', 'name email employeeId department')
+      .populate('book')
+      .populate('employee')
       .sort({ borrowDate: -1 });
 
     res.json(report);
@@ -200,7 +200,7 @@ router.get('/export/pdf/:type', async (req, res) => {
       const data = await Borrowing.find({
         status: { $in: ['borrowed', 'overdue'] },
         dueDate: { $lt: new Date() },
-      }).populate('book', 'title author').populate('employee', 'name employeeId');
+      }).populate('book').populate('employee');
 
       doc.fontSize(11).font('Helvetica-Bold').text(`Total Overdue: ${data.length}`);
       doc.moveDown(0.5);
@@ -247,9 +247,7 @@ router.get('/export/pdf/:type', async (req, res) => {
         doc.moveDown(0.2);
       });
     } else if (type === 'employee-wise') {
-      const records = await Borrowing.find({})
-        .populate('book', 'title author')
-        .populate('employee', 'name employeeId department');
+      const records = await Borrowing.find({}).populate('book').populate('employee');
 
       records.forEach((b, i) => {
         doc.fontSize(9).font('Helvetica')
@@ -273,6 +271,11 @@ router.get('/export/excel/:type', async (req, res) => {
     let data = [];
     let headers = [];
 
+    const fmtDate = (v) => {
+      if (!v) return '—';
+      try { return new Date(v).toLocaleDateString(); } catch { return String(v); }
+    };
+
     if (type === 'stock') {
       const books = await Book.find({ isActive: true }).sort({ title: 1 });
       headers = ['Title', 'Author', 'ISBN', 'Category', 'Total Copies', 'Available', 'Issued', 'Status'];
@@ -285,23 +288,21 @@ router.get('/export/excel/:type', async (req, res) => {
       const overdue = await Borrowing.find({
         status: { $in: ['borrowed', 'overdue'] },
         dueDate: { $lt: new Date() },
-      }).populate('book', 'title author').populate('employee', 'name employeeId email');
+      }).populate('book').populate('employee');
       headers = ['Book', 'Author', 'Employee', 'Employee ID', 'Email', 'Borrow Date', 'Due Date', 'Days Overdue'];
       data = overdue.map((b) => [
         b.book?.title, b.book?.author, b.employee?.name, b.employee?.employeeId,
-        b.employee?.email, b.borrowDate?.toLocaleDateString(), b.dueDate?.toLocaleDateString(),
+        b.employee?.email, fmtDate(b.borrowDate), fmtDate(b.dueDate),
         Math.ceil((Date.now() - new Date(b.dueDate)) / (1000 * 60 * 60 * 24)),
       ]);
     } else if (type === 'employee-wise') {
-      const records = await Borrowing.find({})
-        .populate('book', 'title author')
-        .populate('employee', 'name employeeId department');
+      const records = await Borrowing.find({}).populate('book').populate('employee');
       headers = ['Employee', 'Employee ID', 'Department', 'Book', 'Author', 'Borrow Date', 'Due Date', 'Return Date', 'Status', 'Returned Late'];
       data = records.map((b) => [
         b.employee?.name, b.employee?.employeeId, b.employee?.department,
         b.book?.title, b.book?.author,
-        b.borrowDate?.toLocaleDateString(), b.dueDate?.toLocaleDateString(),
-        b.returnDate?.toLocaleDateString() || '—', b.status,
+        fmtDate(b.borrowDate), fmtDate(b.dueDate),
+        fmtDate(b.returnDate), b.status,
         b.isReturnedLate ? 'Yes' : 'No',
       ]);
     } else if (type === 'most-borrowed') {

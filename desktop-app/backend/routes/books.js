@@ -77,8 +77,16 @@ router.get('/:id/barcode', async (req, res) => {
     if (!book) return res.status(404).json({ error: 'Book not found' });
 
     const barcodeData = book.barcode || book.isbn || book._id.toString();
-    const barcodeBuffer = await generateBarcodeDataURL(barcodeData, { includetext: false });
-    res.json({ barcode: barcodeBuffer, data: barcodeData });
+    // Encode only the 6-digit number (e.g. 000019) so the barcode is compact
+    // enough for small stickers. Legacy LIB-YYYY-XXXXXX codes are shortened too.
+    const shortMatch = String(barcodeData).match(/^[A-Z]+-\d{4}-(\d{6})$/);
+    const barcodeValue = shortMatch ? shortMatch[1] : barcodeData;
+    const barcodeBuffer = await generateBarcodeDataURL(barcodeValue, {
+      includetext: false,
+      scale: 4,
+      height: 12,
+    });
+    res.json({ barcode: barcodeBuffer, data: barcodeValue });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -180,9 +188,11 @@ router.post('/import/csv', protect, upload.single('file'), async (req, res) => {
       }
 
       // Rule 2.2: Check duplicate title+author (warning, not blocked)
+      const safeTitle = title.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const safeAuthor = author.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
       const existingBook = await Book.findOne({
-        title: { $regex: new RegExp(`^${title.trim()}$`, 'i') },
-        author: { $regex: new RegExp(`^${author.trim()}$`, 'i') },
+        title: { $regex: new RegExp(`^${safeTitle}$`, 'i') },
+        author: { $regex: new RegExp(`^${safeAuthor}$`, 'i') },
         isActive: true,
       });
       if (existingBook) {
