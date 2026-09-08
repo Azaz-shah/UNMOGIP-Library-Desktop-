@@ -26,5 +26,31 @@ Thumbs.db
 
 # Electron desktop-app
 desktop-app/release/
+desktop-app/release2/
+desktop-app/release3/
+desktop-app/release4/
+desktop-app/release5/
 desktop-app/node_modules/
 desktop-app/build/
+desktop-app/uploads/
+
+# SQLite databases
+desktop-app/*.sqlite
+desktop-app/*.sqlite-shm
+desktop-app/*.sqlite-wal
+
+# Temp patch/fix scripts
+desktop-app/patch-*.js
+desktop-app/fix_*.js
+desktop-app/fix-*.js
+desktop-app/rebuild-*.js
+desktop-app/_ctx2.js
+desktop-app/_verify.js
+desktop-app/smoke-cdp.mjs
+desktop-app/smoke-server.cjs
+desktop-app/smoke.log
+desktop-app/start.cmd
+desktop-app/rebuild-and-start.cmd
+desktop-app/better-sqlite3-prebuilt.tar.gz
+desktop-app/package-lock.json
+desktop-app/backend/package-lock.json
