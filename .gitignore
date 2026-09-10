@@ -25,7 +25,6 @@ Thumbs.db
 .idea/
 
 # Electron desktop-app
-desktop-app/frontend/
 desktop-app/release/
 desktop-app/release2/
 desktop-app/release3/

@@ -8,6 +8,7 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
+    "setup": "npm install && npm run rebuild",
     "build:frontend": "cd ../Frontend/my-app && npm install --silent && npm run build && cp -r dist/* ../../desktop-app/frontend/",
     "rebuild": "@electron/rebuild -f -w better-sqlite3",
     "pack": "electron-builder --dir",

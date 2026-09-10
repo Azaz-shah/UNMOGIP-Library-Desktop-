@@ -14,5 +14,10 @@ cd ../..
 rm -rf desktop-app/frontend/assets
 cp -r Frontend/my-app/dist/* desktop-app/frontend/
 
+echo "🔧 Rebuilding native modules for Electron..."
+cd desktop-app
+npm install
+npx @electron/rebuild -f -w better-sqlite3
+
 echo "✅ Frontend built and synced successfully!"
 echo "   Run 'cd desktop-app && npm start' to launch the app."
