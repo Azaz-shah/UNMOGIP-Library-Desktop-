@@ -1,5 +1,5 @@
 #!/bin/bash
-# Build the React frontend and sync to desktop-app/frontend/
+# Build the React frontend and install prebuilt better-sqlite3
 # Run this from the project root: ./build-frontend.sh
 
 set -e
@@ -14,10 +14,10 @@ cd ../..
 rm -rf desktop-app/frontend/assets
 cp -r Frontend/my-app/dist/* desktop-app/frontend/
 
-echo "🔧 Rebuilding native modules for Electron..."
+echo "🔧 Installing better-sqlite3 prebuilt binary (no Visual Studio needed)..."
 cd desktop-app
 npm install
-npx @electron/rebuild -f -w better-sqlite3
+node fix-sqlite.js
 
 echo "✅ Frontend built and synced successfully!"
 echo "   Run 'cd desktop-app && npm start' to launch the app."
