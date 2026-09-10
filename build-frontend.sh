@@ -17,7 +17,7 @@ cp -r Frontend/my-app/dist/* desktop-app/frontend/
 echo "🔧 Installing better-sqlite3 prebuilt binary (no Visual Studio needed)..."
 cd desktop-app
 npm install
-node fix-sqlite.js
+node setup-sqlite.js
 
 echo "✅ Frontend built and synced successfully!"
 echo "   Run 'cd desktop-app && npm start' to launch the app."
