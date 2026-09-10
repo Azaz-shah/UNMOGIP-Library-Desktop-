@@ -192,9 +192,14 @@ export default function Books() {
       setImportResult(data);
       setImportStep(3);
       toast.success(`Imported ${data.imported} books`);
-      load();
+      // Reload books after short delay to ensure backend has finished
+      setTimeout(() => load(), 500);
     } catch (err) {
-      toast.error(err.response?.data?.error || 'Import failed');
+      console.error('Import error:', err);
+      const msg = err.response?.data?.error || err.message || 'Import failed';
+      toast.error(msg);
+      // Go back to step 2 on error so user can retry
+      setImportStep(2);
     } finally {
       setImportingBulk(false);
     }
@@ -1003,7 +1008,7 @@ export default function Books() {
                       {importResult.warnings.map((w, i) => (
                         <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.375rem', fontSize: '0.8rem', color: '#92400e', marginBottom: '0.25rem' }}>
                           <HiOutlineExclamationCircle style={{ fontSize: '0.9rem', marginTop: '2px', flexShrink: 0 }} />
-                          <span>{w}</span>
+                          <span>{typeof w === 'string' ? w : `${w?.row ? `Row ${w.row}: ` : ''}${w?.warning || w?.message || 'Warning'}${w?.title ? ` ("${w.title}")` : ''}`}</span>
                         </div>
                       ))}
                     </div>
@@ -1114,9 +1119,9 @@ export default function Books() {
               ) : barcodeImage ? (
                 <div style={{
                   background: 'white', border: '2px solid var(--gray-200)', borderRadius: 'var(--radius-lg)',
-                  padding: '1.5rem', display: 'inline-block',
+                  padding: '0.75rem', display: 'inline-block',
                 }}>
-                  <img src={barcodeImage} alt="Book Barcode" style={{ maxWidth: '100%', height: 'auto' }} />
+                  <img src={barcodeImage} alt="Book Barcode" style={{ maxWidth: '200px', height: 'auto' }} />
                 </div>
               ) : null}
 

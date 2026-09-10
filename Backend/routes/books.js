@@ -172,9 +172,11 @@ router.post('/import/csv', protect, upload.single('file'), async (req, res) => {
       }
 
       // Rule 2.2: Check duplicate title+author (warning, not blocked)
+      const safeTitle = title.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const safeAuthor = author.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
       const existingBook = await Book.findOne({
-        title: { $regex: new RegExp(`^${title.trim()}$`, 'i') },
-        author: { $regex: new RegExp(`^${author.trim()}$`, 'i') },
+        title: { $regex: new RegExp(`^${safeTitle}$`, 'i') },
+        author: { $regex: new RegExp(`^${safeAuthor}$`, 'i') },
         isActive: true,
       });
       if (existingBook) {

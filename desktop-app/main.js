@@ -29,6 +29,12 @@ async function launchApp() {
     const dbPath = path.join(userData, 'library.sqlite');
     const frontendDist = path.join(__dirname, 'frontend');
 
+    // Load .env from userData folder so email settings survive app updates
+    const envPath = path.join(userData, '.env');
+    require('dotenv').config({ path: envPath });
+    // Also try the backend folder (dev mode)
+    require('dotenv').config({ path: path.join(__dirname, 'backend', '.env') });
+
     const serverModule = await import(
       pathToFileURL(path.join(__dirname, 'backend', 'server.js')).href
     );

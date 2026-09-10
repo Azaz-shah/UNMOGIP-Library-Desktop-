@@ -76,7 +76,14 @@ export function createApp({ frontendDist = null } = {}) {
   if (frontendDist) {
     const dist = path.resolve(frontendDist);
     if (fs.existsSync(dist)) {
-      app.use(express.static(dist));
+      app.use(express.static(dist, {
+        etag: false,
+        lastModified: false,
+        maxAge: 0,
+        setHeaders: (res) => {
+          res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate');
+        },
+      }));
       app.get('*', (req, res, next) => {
         if (req.path.startsWith('/api')) return next();
         res.sendFile(path.join(dist, 'index.html'));
